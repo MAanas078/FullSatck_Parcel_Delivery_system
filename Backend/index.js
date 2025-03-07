@@ -3,7 +3,8 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const authRoute = require("./routes/auth");
-
+const userRoute = require("./routes/user");
+const parcelRoute = require("./routes/parcel");
 dotenv.config();
 const app = express();
 
@@ -14,9 +15,9 @@ app.use(cors());
 app.use(express.json());
 
 //ROUTES
-app.use("/auth",authRoute);
-
-
+app.use("/auth",authRoute)
+app.use("/users",userRoute)
+app.use("/parcels",parcelRoute)
 //DataBAse connection
 const DB_path = process.env.DB;
 mongoose.connect(DB_path, {
