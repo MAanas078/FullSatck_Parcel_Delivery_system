@@ -8,12 +8,13 @@ const {
   getUserParcel,
   deleteParcel,
 } = require("../controllers/parcel");
+const {verifyToken,verifyTokenAndAuthorization} = require("../middlewares/verifyToken");
 
 //ADD parcels
-router.post("/", createParcel);
+router.post("/",verifyToken, createParcel);
 
 //GET all parcels
-router.get("/", getAllParcels);
+router.get("/",verifyTokenAndAuthorization, getAllParcels);
 
 //UPDATE parcel
 router.put("/:id", updateParcel);
@@ -23,7 +24,7 @@ router.put("/:id", updateParcel);
 router.get("find/:id", getOneParcel);
 
 //GET users parcels
-router.post("/user/:email", getUserParcel);
+router.post("/me", getUserParcel);
 
 //DELETE Parcels
 

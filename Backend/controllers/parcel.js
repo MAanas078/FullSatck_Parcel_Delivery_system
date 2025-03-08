@@ -6,7 +6,7 @@ const createParcel = async (req, res) => {
   try {
     const newParcels = Parcel(req.body);
     const parcel = await newParcels.save();
-    res.statue(201).json(parcel);
+    res.status(201).json(parcel);
   } catch (error) {
     res.status(500).json(error);
   }
@@ -27,12 +27,26 @@ const getAllParcels = async (req, res) => {
 
 const updateParcel = async (req, res) => {
   try {
-    const parcel = await Parcel.findById(req.params.id);
-    res.status(201).json(parcel);
+    const parcelId = req.params.id; // Get the parcel ID from the request parameters
+    const updateData = req.body; // Get the update data from the request body
+
+    // Use findByIdAndUpdate to update the parcel
+    const updatedParcel = await Parcel.findByIdAndUpdate(
+      parcelId,
+      updateData,
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedParcel) {
+      return res.status(404).json({ message: "Parcel not found" });
+    }
+
+    res.status(200).json(updatedParcel); // Send the updated parcel as the response
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json({ message: "Internal server error", error: error.message });
   }
 };
+
 
 //Get one parcel
 
@@ -63,7 +77,7 @@ const getUserParcel = async (req, res) => {
 const deleteParcel = async (req, res) => {
   try {
     const parcel = await Parcel.findByidAndDelete(req.params.id);
-    res.status(201).json("parcel has been deleted successfully");
+    res.status(201).json(parcel,"parcel has been deleted successfully");
   } catch (error) {}
 };
 

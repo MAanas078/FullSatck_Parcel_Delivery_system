@@ -50,9 +50,8 @@ const loginUser = async (req, res) => {
       process.env.JWT_SEC,
       { expiresIn: "10d" } // Fix: expiresIn
     );
-
-    res.status(200).json({ ...info, accessToken });
-  } catch (error) {
+    res.status(200).json({ ...info, accessToken, fullname: user.fullname });
+  }catch (error) {
     res.status(500).json(error);
   }
 };
