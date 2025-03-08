@@ -9,6 +9,7 @@ const deleteUser = async (req, res) => {
     res.status(500).json({ message: "Failed to delete user", error: error.message }); // Improved error response
   }
 };
+
 // Get all Users
 const getAllUsers = async (req, res) => {
   try {
