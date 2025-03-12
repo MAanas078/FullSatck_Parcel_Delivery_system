@@ -7,7 +7,7 @@ dotenv.config();
 
 // Register User
 const registerUser = async (req, res) => {
-  const newUser = new User({
+  const newUser = User({
     fullname: req.body.fullname,
     email: req.body.email,
     age: req.body.age,
@@ -44,11 +44,10 @@ const loginUser = async (req, res) => {
     }
 
     const { password, ...info } = user._doc;
-
     const accessToken = jwt.sign( // Fix: accessToken
       { id: user._id, role: user.role },
       process.env.JWT_SEC,
-      { expiresIn: "10d" } // Fix: expiresIn
+      { expiresIn: "5d" } // Fix: expiresIn
     );
     res.status(200).json({ ...info, accessToken, fullname: user.fullname });
   }catch (error) {

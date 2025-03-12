@@ -6,9 +6,9 @@ const CryptoJs = require("crypto-js");
 
 dotenv.config();
 
-const sendWelcomeEmail = async (fullname, password, email) => {
+const sendWelcomeEmail = async () => {
   const users = await User.find({ status: 0 });
- 
+  
 
   if (users.length > 0) {
     for (let user of users) {
@@ -17,12 +17,12 @@ const sendWelcomeEmail = async (fullname, password, email) => {
       ejs.renderFile(
         "templates/welcome.ejs",
         { fullname: user.fullname,password:originalPassword, email: user.email },
-        async (err, data) => {
+        async (err, info) => {
           let messageOption = {
             from: process.env.EMAIL,
             to: user.email,
             subject: "Welcome to SendIT",
-            html: data,
+            html: info,
           };
 
 

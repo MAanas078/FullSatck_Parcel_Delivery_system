@@ -1,13 +1,14 @@
 const dotenv = require("dotenv");
 const jwt = require("jsonwebtoken");
-dotenv.config(); //!now i can access every variable in env  file
+dotenv.config();
+
 const verifyToken = (req, res, next) => {
-  const authHeader = req.header.token;
+  const authHeader = req.headers.token;
 
   if (authHeader) {
-    const token = authHeader.split("")[1];
-    jwt.verify(token, SpeechRecognitionResultList.env.JWT_SEC, (err, user) => {
-      if (err) res.status(403).json("Token is not valid");
+    const token = authHeader.split(" ")[1];
+    jwt.verify(token, process.env.JWT_SEC, (err, user) => {
+      if (err) res.status(403).json("Token is not Valid....");
       req.user = user;
       next();
     });
