@@ -8,7 +8,7 @@ dotenv.config();
 const SendPracelPendingEmail = async () => {
   const parcels = await Parcel.find({ status: 0 });
 
-  if (parcels.length > 0) { // Fix: Corrected typo "leangth" to "length"
+  if (parcels.length > 0) {
     for (let parcel of parcels) {
       // Email to the Sender
       ejs.renderFile(
@@ -24,7 +24,7 @@ const SendPracelPendingEmail = async () => {
         },
         async (err, data) => {
           if (err) {
-            console.log("EJS render error (sender):", err); // Log EJS render error
+            console.log("EJS render error (sender):", err);
             return;
           }
 
@@ -37,9 +37,9 @@ const SendPracelPendingEmail = async () => {
 
           try {
             await sendMail(messageOption);
-            console.log("Pending email sent to sender:", parcel.senderemail); // Log success
+            console.log("Pending email sent to sender:", parcel.senderemail);
           } catch (error) {
-            console.log("Email send error (sender):", error); // Log email send error
+            console.log("Email send error (sender):", error);
           }
         }
       );
@@ -58,7 +58,7 @@ const SendPracelPendingEmail = async () => {
         },
         async (err, data) => {
           if (err) {
-            console.log("EJS render error (recipient):", err); // Log EJS render error
+            console.log("EJS render error (recipient):", err);
             return;
           }
 
@@ -71,15 +71,15 @@ const SendPracelPendingEmail = async () => {
 
           try {
             await sendMail(messageOption);
-            console.log("Pending email sent to recipient:", parcel.recipientemail); // Log success
+            console.log("Pending email sent to recipient:", parcel.recipientemail);
             await Parcel.findByIdAndUpdate(parcel._id, { $set: { status: 1 } });
           } catch (error) {
-            console.log("Email send error (recipient):", error); // Log email send error
+            console.log("Email send error (recipient):", error);
           }
         }
       );
     }
   }
-    
 };
+
 module.exports = { SendPracelPendingEmail };

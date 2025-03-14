@@ -6,9 +6,11 @@ const verifyToken = (req, res, next) => {
   const authHeader = req.headers.token;
 
   if (authHeader) {
-    const token = authHeader.split(" ")[1];
+    const token = authHeader.split(" ")[1]; // Correct split
     jwt.verify(token, process.env.JWT_SEC, (err, user) => {
-      if (err) res.status(403).json("Token is not Valid....");
+      if (err) {
+        return res.status(403).json("Token is not valid");
+      }
       req.user = user;
       next();
     });
@@ -26,4 +28,5 @@ const verifyTokenAndAuthorization = (req, res, next) => {
     }
   });
 };
+
 module.exports = { verifyToken, verifyTokenAndAuthorization };
