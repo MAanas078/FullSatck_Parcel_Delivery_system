@@ -20,6 +20,10 @@ const SendParcelDeliveredEmail = async () => {
           note: parcel.note,
         },
         async (err, data) => {
+          if (err) {
+            console.error("Error rendering EJS for sender:", err);
+            return;
+          }
           let messageOption = {
             from: process.env.EMAIL,
             to: parcel.senderemail,
@@ -29,9 +33,8 @@ const SendParcelDeliveredEmail = async () => {
 
           try {
             await sendMail(messageOption);
-           
           } catch (error) {
-            console.log(err);
+            console.error("Error sending email to sender:", error);
           }
         }
       );
@@ -48,6 +51,10 @@ const SendParcelDeliveredEmail = async () => {
           note: parcel.note,
         },
         async (err, data) => {
+          if (err) {
+            console.error("Error rendering EJS for recipient:", err);
+            return;
+          }
           let messageoption = {
             from: process.env.EMAIL,
             to: parcel.recipientemail,
@@ -55,14 +62,15 @@ const SendParcelDeliveredEmail = async () => {
             html: data,
           };
           try {
-           await sendMail(messageoption);
-            await Parcel.findByIdAndUpdate(parcel._id, { $set: { status: 3} });
+            await sendMail(messageoption);
+            await Parcel.findByIdAndUpdate(parcel._id, { $set: { status: 3 } });
           } catch (error) {
-            console.log(err);
+            console.error("Error updating parcel status or sending email:", error);
           }
         }
       );
     }
   }
 };
-module.exports = {SendParcelDeliveredEmail };
+
+module.exports = { SendParcelDeliveredEmail };

@@ -18,6 +18,7 @@ app.use(express.json());
 app.use("/api/v1/auth",authRoute)
 app.use("/api/v1/users",userRoute)
 app.use("/api/v1/parcels",parcelRoute)
+
 //DataBAse connection
 const DB_path = process.env.DB;
 mongoose.connect(DB_path, {
@@ -28,7 +29,6 @@ mongoose.connect(DB_path, {
   }).catch((err) => {
     console.log("DB connection failed:", err);
   });
-
 
 
 //server

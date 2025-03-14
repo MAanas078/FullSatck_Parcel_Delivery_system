@@ -4,11 +4,11 @@ const Parcel = require("../models/Parcel");
 
 const createParcel = async (req, res) => {
   try {
-    const newParcels = Parcel(req.body);
-    const parcel = await newParcels.save();
-    res.status(201).json(parcel);
+    const newParcels = Parcel(req.body); // Create a new parcel instance
+    const parcel = await newParcels.save(); // Save the parcel to the database
+     res.status(201).json(parcel); // Use return here
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json(error); // Use return here
   }
 };
 
@@ -16,10 +16,19 @@ const createParcel = async (req, res) => {
 
 const getAllParcels = async (req, res) => {
   try {
+    console.log("Fetching all parcels..."); // Log the start of the function
+
     const parcels = await Parcel.find().sort({ createdAt: -1 });
+    console.log("Parcels fetched:", parcels); // Log the fetched parcels
+
+    if (parcels.length === 0) {
+      return res.status(200).json({ message: "No parcels found", parcels: [] });
+    }
+
     res.status(200).json(parcels);
   } catch (error) {
-    res.status(500).json(error);
+    console.error("Error fetching parcels:", error); // Log the error
+    res.status(500).json({ message: "Internal server error", error: error.message });
   }
 };
 
@@ -78,7 +87,9 @@ const deleteParcel = async (req, res) => {
   try {
     const parcel = await Parcel.findByidAndDelete(req.params.id);
     res.status(201).json(parcel,"parcel has been deleted successfully");
-  } catch (error) {}
+  } catch (error) {
+    res.status(500).json(error)
+  }
 };
 
 module.exports = {

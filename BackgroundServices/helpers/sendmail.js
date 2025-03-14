@@ -1,6 +1,6 @@
-const  nodemailer = require("nodemailer");
+const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
-dotenv.config()
+dotenv.config();
 function createTransporter(config) {
   const transporter = nodemailer.createTransport(config);
   return transporter;
@@ -16,16 +16,15 @@ let configurations = {
   },
 };
 
-
 const sendMail = async (messageoption) => {
-    try {
-      const transporter = await createTransporter(configurations);
-      await transporter.verify();
-      const info = await transporter.sendMail(messageoption); // Use await without a callback
-      console.log("Message sent: %s", info.response);
-    } catch (error) {
-      console.error("Error sending email: ", error);
+  const transporter = await createTransporter(configurations);
+  await transporter.verify();
+  await transporter.sendMail(messageoption, (error, info) => {
+    if (error) {
+      console.log(error);
     }
-  };
+    console.log(info.response);
+  });
+};
 
-module.exports=sendMail;
+module.exports = sendMail;
