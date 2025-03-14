@@ -1,5 +1,6 @@
 import { DataGrid } from "@mui/x-data-grid";
 import { FaTrash } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 function Parcels() {
   const rows = [
@@ -138,9 +139,11 @@ function Parcels() {
         <h1 className="text-[20px] font-semibold transition-all duration-300 hover:text-[#333]">
           All Parcels
         </h1>
-        <button className="bg-[#1e1e1e] text-white px-4 py-2 cursor-pointer hover:bg-[#333] hover:text-[#E9EB77] transition-all duration-300 rounded transform hover:scale-105 active:scale-95">
+        <Link to="/newparcel">
+       <button className="bg-[#1e1e1e] text-white px-4 py-2 cursor-pointer hover:bg-[#333] hover:text-[#E9EB77] transition-all duration-300 rounded transform hover:scale-105 active:scale-95">
           New Parcel
         </button>
+       </Link>
       </div>
 
       {/* DataGrid with Hover */}
