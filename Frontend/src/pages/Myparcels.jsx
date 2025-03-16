@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FaBars, FaUser } from "react-icons/fa"; // Importing icons
-
+import { Link } from "react-router-dom";
 function Myparcels() {
   const [open, setOpen] = useState(false);
 
@@ -28,9 +28,11 @@ function Myparcels() {
         {open && (
           <div className="absolute top-[50px] right-0 h-[200px] w-[250px] bg-[#e9de77] z-[999] shadow-xl rounded-lg p-3">
             <ul className="flex flex-col items-center justify-center text-[#555]">
-              <li className="hover:text-[#fff] my-[5px] cursor-pointer">
-                All Parcels
-              </li>
+              <Link to="/allparcels">
+                <li className="hover:text-[#fff] my-[5px] cursor-pointer">
+                  All Parcels
+                </li>
+              </Link>
               <li className="hover:text-[#fff] my-[5px] cursor-pointer">
                 Statements
               </li>
@@ -122,7 +124,9 @@ function Myparcels() {
             >
               Rejected
             </button>
-            <span className="text-[#FF0000] text-[18px]">Wrong Address....</span>
+            <span className="text-[#FF0000] text-[18px]">
+              Wrong Address....
+            </span>
           </div>
         </div>
         <div className="flex justify-between bg-[#d9d9d9] text-black h-[150px] w-[70vw] m-[20px] p-[20px] font-semibold cursor-pointer">
@@ -183,7 +187,9 @@ function Myparcels() {
             >
               Rejected
             </button>
-            <span className="text-[#FF0000] text-[18px]">Wrong Address....</span>
+            <span className="text-[#FF0000] text-[18px]">
+              Wrong Address....
+            </span>
           </div>
         </div>
         <div className="flex justify-between bg-[#d9d9d9] text-black h-[150px] w-[70vw] m-[20px] p-[20px] font-semibold cursor-pointer">
