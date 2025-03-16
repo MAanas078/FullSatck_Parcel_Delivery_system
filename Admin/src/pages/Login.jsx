@@ -5,7 +5,7 @@ function Login() {
     <div>
       <div className="h-[80vh] flex items-center justify-evenly p-[50px] text-gray-300">
         <div className="relative">
-          <h2 className="text-[#d9d9d9] font-semibold text-[35px] transition-transform duration-500 ease-in-out transform hover:rotate-y-180 hover:scale-105">
+          <h2 className="text-[#d9d9d9] font-semibold text-[35px] transition-transform duration-500 ease-in-out transform hover:rotate-y-180 hover:scale-105 mt-[20px]">
             SendIT Admin
           </h2>
           <img src="/hero.png" alt="Hero illustration" />
