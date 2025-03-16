@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import Myparcels from "./pages/Myparxcels";
+import Myparcels from "./pages/Myparcels";
 import Parcel from "./pages/Parcel";
 import Parcels from "./pages/Parcels";
 
