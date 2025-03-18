@@ -41,16 +41,16 @@ function Home() {
           series={[
             {
               data: [
-                { id: 0, value: 10, label: "series A" },
-                { id: 1, value: 15, label: "series B" },
-                { id: 2, value: 20, label: "series C" },
+                { id: 0, value: 10, label: "Pending Parcels" },
+                { id: 1, value: 25, label: "Delivered Parcels" },
+                { id: 2, value: 5, label: "Rejected Parcels" },
               ],
-              innerRadius: 30,
+              innerRadius: 20,
               outerRadius: 100,
               paddingAngle: 5,
               cornerRadius: 5,
               startAngle: -45,
-              endAngle: 225,
+              endAngle: 245,
               cx: 150,
               cy: 150,
             },

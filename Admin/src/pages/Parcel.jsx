@@ -1,8 +1,13 @@
+
 function Parcel() {
+   
+    
+
+
   return (
-    <div className="m-[30px] bg-[#fff] p-[20px]">
+    <div className="m-[30px] bg-[#fff] p-[20px] ">
       <h2 className="font-semibold">Parcel</h2>
-      <div className="flex">
+      <div className="flex flex-wrap">
         <div className="m-[20px]">
           <div className="flex flex-col my-[20px]">
             <label className="text-gray-700 font-medium">From</label>
@@ -97,6 +102,7 @@ function Parcel() {
             className="bg-[#1e1e1e] cursor-pointer text-white p-[10px] w-[300px] rounded-md 
   hover:text-[#E9EB77] hover:bg-[#333] hover:scale-105 hover:shadow-lg 
   transition-all duration-300 ease-in-out transform"
+        
           >
             Update
           </button>

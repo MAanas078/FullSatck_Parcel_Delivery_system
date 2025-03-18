@@ -1,102 +1,126 @@
 const Parcel = require("../models/Parcel");
 
-//create a parcel
-
+// 📌 Create a Parcel
 const createParcel = async (req, res) => {
   try {
-    const newParcels = Parcel(req.body); // Create a new parcel instance
-    const parcel = await newParcels.save(); // Save the parcel to the database
-     res.status(201).json(parcel); // Use return here
+    console.log("📩 Creating new parcel:", req.body);
+    
+    const newParcel = new Parcel(req.body); // Correct way to create an instance
+    const parcel = await newParcel.save(); // Save to DB
+
+    console.log("✅ Parcel created:", parcel);
+    res.status(201).json(parcel);
   } catch (error) {
-    res.status(500).json(error); // Use return here
+    console.error("❌ Error creating parcel:", error);
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 };
 
-//Get all parcels
-
+// 📌 Get All Parcels
 const getAllParcels = async (req, res) => {
   try {
-    console.log("Fetching all parcels..."); // Log the start of the function
-
+    console.log("📦 Fetching all parcels...");
     const parcels = await Parcel.find().sort({ createdAt: -1 });
-    console.log("Parcels fetched:", parcels); // Log the fetched parcels
 
     if (parcels.length === 0) {
       return res.status(200).json({ message: "No parcels found", parcels: [] });
     }
 
+    console.log("✅ Parcels fetched:", parcels.length);
     res.status(200).json(parcels);
   } catch (error) {
-    console.error("Error fetching parcels:", error); // Log the error
-    res.status(500).json({ message: "Internal server error", error: error.message });
+    console.error("❌ Error fetching parcels:", error);
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 };
 
-//Update the parcel
+// 📌 Get One Parcel
+const getOneParcel = async (req, res) => {
+  try {
+    console.log(`🔎 Searching for parcel with ID: ${req.params.id}`);
+    
+    const parcel = await Parcel.findById(req.params.id);
 
+    if (!parcel) {
+      return res.status(404).json({ message: "Parcel not found" });
+    }
+
+    console.log("✅ Parcel found:", parcel);
+    res.status(200).json(parcel);
+  } catch (error) {
+    console.error("❌ Error fetching parcel:", error);
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
+  }
+};
+
+// 📌 Get User's Parcels
+const getUserParcel = async (req, res) => {
+  try {
+    console.log(`📩 Fetching parcels for user: ${req.body.email}`);
+    
+    const parcels = await Parcel.find({ senderemail: req.body.email }).sort({
+      createdAt: -1,
+    });
+
+    if (parcels.length === 0) {
+      return res.status(200).json({ message: "No parcels found for this user", parcels: [] });
+    }
+
+    console.log("✅ User parcels fetched:", parcels.length);
+    res.status(200).json(parcels);
+  } catch (error) {
+    console.error("❌ Error fetching user parcels:", error);
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
+  }
+};
+
+// 📌 Update Parcel
 const updateParcel = async (req, res) => {
   try {
-    const parcelId = req.params.id; // Get the parcel ID from the request parameters
-    const updateData = req.body; // Get the update data from the request body
+    console.log(`✏ Updating parcel with ID: ${req.params.id}`);
 
-    // Use findByIdAndUpdate to update the parcel
     const updatedParcel = await Parcel.findByIdAndUpdate(
-      parcelId,
-      updateData,
-      { new: true } // Return the updated document
+      req.params.id,
+      req.body,
+      { new: true } // Return updated document
     );
 
     if (!updatedParcel) {
       return res.status(404).json({ message: "Parcel not found" });
     }
 
-    res.status(200).json(updatedParcel); // Send the updated parcel as the response
+    console.log("✅ Parcel updated:", updatedParcel);
+    res.status(200).json(updatedParcel);
   } catch (error) {
-    res.status(500).json({ message: "Internal server error", error: error.message });
+    console.error("❌ Error updating parcel:", error);
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 };
 
-
-//Get one parcel
-
-const getOneParcel = async (req, res) => {
-  try {
-    const parcel = await Parcel.findById(req.params.id);
-    res.status(200).json(parcel);
-  } catch (error) {
-    res.status(500).json(error);
-  }
-};
-
-//Get User's Parcel
-
-const getUserParcel = async (req, res) => {
-  try {
-    const parcels = await Parcel.find({ senderemail: req.body.email }).sort({
-      createdAt: -1,
-    });
-    res.status(200).json(parcels);
-  } catch (error) {
-    res.status(500).json(error);
-  }
-};
-
-//Delete the Parcel
-
+// 📌 Delete Parcel (Fixed `findByidAndDelete`)
 const deleteParcel = async (req, res) => {
   try {
-    const parcel = await Parcel.findByidAndDelete(req.params.id);
-    res.status(201).json(parcel,"parcel has been deleted successfully");
+    console.log(`🗑 Deleting parcel with ID: ${req.params.id}`);
+
+    const parcel = await Parcel.findByIdAndDelete(req.params.id);
+
+    if (!parcel) {
+      return res.status(404).json({ message: "Parcel not found" });
+    }
+
+    console.log("✅ Parcel deleted successfully:", parcel);
+    res.status(200).json({ message: "Parcel deleted successfully", parcel });
   } catch (error) {
-    res.status(500).json(error)
+    console.error("❌ Error deleting parcel:", error);
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 };
 
 module.exports = {
-  deleteParcel,
-  getUserParcel,
-  getOneParcel,
-  updateParcel,
-  getAllParcels,
   createParcel,
+  getAllParcels,
+  getOneParcel,
+  getUserParcel,
+  updateParcel,
+  deleteParcel,
 };
