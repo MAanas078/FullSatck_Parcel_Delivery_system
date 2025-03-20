@@ -24,7 +24,8 @@ router.put("/:id", updateParcel);
 
 //GET ONE parcel
 
-router.get("find/:id", getOneParcel);
+router.get("/find/:id", getOneParcel);
+
 
 //GET users parcels
 router.post("/me", getUserParcel);
