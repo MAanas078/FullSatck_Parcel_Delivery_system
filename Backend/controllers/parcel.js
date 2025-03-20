@@ -36,10 +36,12 @@ const getAllParcels = async (req, res) => {
 
 // 📌 Get One Parcel
 const getOneParcel = async (req, res) => {
+ 
   try {
     console.log(`🔎 Searching for parcel with ID: ${req.params.id}`);
     
     const parcel = await Parcel.findById(req.params.id);
+   
 
     if (!parcel) {
       return res.status(404).json({ message: "Parcel not found" });

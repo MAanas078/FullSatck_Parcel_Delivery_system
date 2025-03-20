@@ -1,10 +1,11 @@
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 dotenv.config();
+
 function createTransporter(config) {
-  const transporter = nodemailer.createTransport(config);
-  return transporter;
+  return nodemailer.createTransport(config);
 }
+
 let configurations = {
   service: "gmail",
   host: "smtp.gmail.com",
@@ -16,15 +17,16 @@ let configurations = {
   },
 };
 
-const sendMail = async (messageoption) => {
-  const transporter = await createTransporter(configurations);
-  await transporter.verify();
-  await transporter.sendMail(messageoption, (error, info) => {
-    if (error) {
-      console.log(error);
-    }
-    console.log(info.response);
-  });
+const sendMail = async (messageOptions) => {
+  try {
+    const transporter = createTransporter(configurations);
+    await transporter.verify(); // Verify the connection configuration
+    const info = await transporter.sendMail(messageOptions);
+    console.log("Message sent: %s", info.messageId);
+    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+  } catch (error) {
+    console.error("Error sending email: ", error);
+  }
 };
 
 module.exports = sendMail;
