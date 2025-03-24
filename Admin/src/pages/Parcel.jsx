@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { publicRequest } from "../requestMethods";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function Parcel() {
   const [parcel, setParcel] = useState({});
   const location = useLocation();
@@ -27,15 +30,21 @@ function Parcel() {
     getParcel();
   }, [parcelId]);
 
-  const habdleUpdate = async () =>{
+  const handleUpdate = async () => {
     try {
-      await publicRequest.put(`/parcels/${parcelId}`, inputs)
-      
+      await publicRequest.put(`/parcels/${parcelId}`, inputs);
+  
+      // Clear the input fields
+      setInputs({});
+  
+      // Show success toast
+      toast.success("Parcel details updated successfully!");
     } catch (error) {
       console.log(error);
-      
+      toast.error("Failed to update the parcel. Please try again.");
     }
-  }
+  };
+  
 
   return (
     <div className="m-[30px] bg-[#fff] p-[20px] ">
@@ -157,7 +166,7 @@ function Parcel() {
             className="bg-[#1e1e1e] cursor-pointer text-white p-[10px] w-[300px] rounded-md 
   hover:text-[#E9EB77] hover:bg-[#333] hover:scale-105 hover:shadow-lg 
   transition-all duration-300 ease-in-out transform"
-  onClick={habdleUpdate}
+  onClick={handleUpdate}
           >
             Update
           </button>
@@ -168,6 +177,7 @@ function Parcel() {
           {parcel.status === 1 || parcel.status === 0 ? <span className="text-red-500 text-[18px]">Pending</span> : <span className="text-green-500 text-[18px]">Delivered</span>}
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }

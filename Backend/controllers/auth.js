@@ -5,55 +5,67 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-// Register User
+// ✅ Register User
 const registerUser = async (req, res) => {
-  const newUser = User({
-    fullname: req.body.fullname,
-    email: req.body.email,
-    age: req.body.age,
-    country: req.body.country,
-    address: req.body.address,
-    password: CryptoJs.AES.encrypt(
-      req.body.password,
-      process.env.PASS
-    ).toString(),
-  });
-
   try {
+    const newUser = new User({
+      fullname: req.body.fullname,
+      email: req.body.email.toLowerCase(), // Store email in lowercase
+      age: req.body.age,
+      country: req.body.country,
+      address: req.body.address,
+      password: CryptoJs.AES.encrypt(req.body.password, process.env.PASS).toString(),
+    });
+
     const user = await newUser.save();
     res.status(201).json(user);
   } catch (error) {
-    res.status(500).json(error);
+    console.error("❌ Registration Error:", error.message);
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 };
 
-// Login User
+// ✅ Login User
 const loginUser = async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.body.email }); // Fix: findOne
+    console.log("🔍 Login Attempt:", req.body.email);
+
+    const user = await User.findOne({ email: req.body.email.toLowerCase() });
+
     if (!user) {
-      return res.status(401).json("You have not registered");
-    }
-    const hashedPassword = CryptoJs.AES.decrypt(
-      user.password,
-      process.env.PASS
-    );
-    const originalPassword = hashedPassword.toString(CryptoJs.enc.Utf8); // Fix: originalPassword
-    if (originalPassword !== req.body.password) {
-      return res.status(401).json("Wrong Password");
+      console.log("🚨 User not found in database");
+      return res.status(401).json({ message: "You have not registered" });
     }
 
+    const hashedPassword = CryptoJs.AES.decrypt(user.password, process.env.PASS);
+    const originalPassword = hashedPassword.toString(CryptoJs.enc.Utf8);
+
+    console.log("🔑 Decrypted Password:", originalPassword); // Debugging
+
+    if (originalPassword !== req.body.password) {
+      console.log("🚨 Incorrect password entered");
+      return res.status(401).json({ message: "Wrong Password" });
+    }
+
+    console.log("✅ Login Successful:", user.fullname);
+
     const { password, ...info } = user._doc;
-    const accessToken = jwt.sign( // Fix: accessToken
-      { id: user._id, role: user.role },
+
+    // ✅ Ensure role exists for JWT
+    const userRole = user.role || "user"; // Default role if missing
+
+    const accessToken = jwt.sign(
+      { id: user._id, role: userRole },
       process.env.JWT_SEC,
-      { expiresIn: "5d" } // Fix: expiresIn
+      { expiresIn: "5d" }
     );
-    res.status(200).json({ ...info, accessToken, fullname: user.fullname });
-  }catch (error) {
-    res.status(500).json(error);
+
+    res.status(200).json({ ...info, accessToken });
+  } catch (error) {
+    console.error("❌ Internal Server Error:", error.message);
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 };
 
-// Export the functions
+// ✅ Export the functions
 module.exports = { registerUser, loginUser };

@@ -1,280 +1,114 @@
-import { useState } from "react";
-import { FaBars, FaUser } from "react-icons/fa"; // Importing icons
-import { Link } from "react-router-dom";
-function Myparcels() {
-  const [open, setOpen] = useState(false);
+import moment from "moment";
+import { useEffect, useState } from "react";
+import { FaUser, FaBars } from "react-icons/fa";
+import { useSelector, useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { publicRequest } from "../requestMethods";
+import { logOut } from "../redux/userRedux";
 
-  const handleOpen = () => {
-    setOpen(!open);
+const MyParcels = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [userOpen, setUserOpen] = useState(false);
+  const [data, setData] = useState([]);
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const getParcels = async () => {
+      if (!user.currentUser?.email) return;
+      try {
+        const res = await publicRequest.post("/parcels/me", {
+          email: user.currentUser.email,
+        });
+        setData(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getParcels();
+  }, [user.currentUser?.email]);
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+    if (userOpen) setUserOpen(false);
+  };
+
+  const toggleUser = () => {
+    setUserOpen(!userOpen);
+    if (menuOpen) setMenuOpen(false);
+  };
+
+  const handleLogout = () => {
+    dispatch(logOut());
+    navigate("/login");
   };
 
   return (
-    <div>
-      <div className="relative flex items-end justify-end mr-[10%] mt-[5%] font-semibold cursor-pointer">
-        {/* Profile Section */}
-        <div
-          className="flex items-center text-white space-x-3"
-          onClick={handleOpen}
-        >
-          <FaBars className="text-xl" /> {/* Menu Button */}
-          <div className="flex items-center space-x-2">
-            <FaUser className="text-lg" /> {/* Profile Icon */}
-            <span className="text-white font-semibold">James Robert</span>{" "}
-            {/* Username */}
-          </div>
+    <div className="min-h-screen w-full overflow-hidden bg-gray-900 text-white">
+      {/* Top Bar */}
+      <div className="relative flex items-center justify-between px-6 py-4 bg-gray-900 text-white">
+        <div className="text-2xl cursor-pointer hover:text-gray-400 transition-all duration-300" onClick={toggleMenu}>
+          <FaBars />
         </div>
-
-        {/* Dropdown Menu */}
-        {open && (
-          <div className="absolute top-[50px] right-0 h-[200px] w-[250px] bg-[#e9de77] z-[999] shadow-xl rounded-lg p-3">
-            <ul className="flex flex-col items-center justify-center text-[#555]">
-              <Link to="/allparcels">
-                <li className="hover:text-[#fff] my-[5px] cursor-pointer">
-                  All Parcels
-                </li>
-              </Link>
-              <li className="hover:text-[#fff] my-[5px] cursor-pointer">
-                Statements
-              </li>
-              <li className="hover:text-[#fff] my-[5px] cursor-pointer">
-                Logout
-              </li>
-            </ul>
-          </div>
-        )}
+        <div>
+          <span className="flex items-center text-white font-semibold cursor-pointer" onClick={toggleUser}>
+            <FaUser className="mr-2" />
+            {user.currentUser?.fullname || "User"}
+          </span>
+        </div>
       </div>
-      <div className="flex flex-col mr-[10%] ml-[10%]">
-        <h2 className="text-[18px] text-[#d9d9d9] p-[20px] ">My Parcels</h2>
 
-        <div className="flex justify-between bg-[#d9d9d9] text-black h-[150px] w-[70vw] m-[20px] p-[20px] font-semibold cursor-pointer">
-          <div>
-            <ul>
-              <li>From: Delhi, India</li>
-              <li>Weight: 300g</li>
-              <li>Date:15/03/2025</li>
-              <li>Sender:James</li>
-            </ul>
-          </div>
-          <div className="flex flex-col">
-            <span>To: Mumbai, India</span>
-            <button
-              className="bg-[#555] text-black w-[100px] cursor-pointer p-[5px] 
-                    hover:bg-[#777] hover:text-[#fff] hover:scale-105 
-                    transition-all duration-200 rounded-md shadow-md mt-[18px]"
-            >
-              Pending
-            </button>
-          </div>
-        </div>
-        <div className="flex justify-between bg-[#d9d9d9] text-black h-[150px] w-[70vw] m-[20px] p-[20px] font-semibold cursor-pointer">
-          <div>
-            <ul>
-              <li>From: Delhi, India</li>
-              <li>Weight: 300g</li>
-              <li>Date:01/03/2025</li>
-              <li>Sender:Alex Doe</li>
-            </ul>
-          </div>
-          <div className="flex flex-col">
-            <span>To: Jaipur, India</span>
-            <button
-              className=" text-[#fff] bg-[#21b134] w-[100px] cursor-pointer p-[5px] 
-                    hover:bg-[#777] hover:text-[#fff] hover:scale-105 
-                    transition-all duration-200 rounded-md shadow-md mt-[18px]"
-            >
-              Delivered
-            </button>
-          </div>
-        </div>
-        <div className="flex justify-between bg-[#d9d9d9] text-black h-[150px] w-[70vw] m-[20px] p-[20px] font-semibold cursor-pointer">
-          <div>
-            <ul>
-              <li>From: Agra, India</li>
-              <li>Weight: 300g</li>
-              <li>Date:15/02/2025</li>
-              <li>Sender:Mitchel Rob</li>
-            </ul>
-          </div>
-          <div className="flex flex-col">
-            <span>To: Mumbai, India</span>
-            <button
-              className="bg-[#555] text-black w-[100px] cursor-pointer p-[5px] 
-                    hover:bg-[#777] hover:text-[#fff] hover:scale-105 
-                    transition-all duration-200 rounded-md shadow-md mt-[18px]"
-            >
-              Pending
-            </button>
-          </div>
-        </div>
-        <div className="flex justify-between bg-[#d9d9d9] text-black h-[150px] w-[70vw] m-[20px] p-[20px] font-semibold cursor-pointer">
-          <div>
-            <ul>
-              <li>From: Delhi, India</li>
-              <li>Weight: 300g</li>
-              <li>Date:12/02/2025</li>
-              <li>Sender:James</li>
-            </ul>
-          </div>
-          <div className="flex flex-col">
-            <span>To: Mumbai, India</span>
-            <button
-              className="bg-[#555] text-[#FF0000] w-[100px] cursor-pointer p-[5px] 
-                    hover:bg-[#777] hover:text-[#FF0000] hover:scale-105 
-                    transition-all duration-200 rounded-md shadow-md mt-[18px]"
-            >
-              Rejected
-            </button>
-            <span className="text-[#FF0000] text-[18px]">
-              Wrong Address....
-            </span>
-          </div>
-        </div>
-        <div className="flex justify-between bg-[#d9d9d9] text-black h-[150px] w-[70vw] m-[20px] p-[20px] font-semibold cursor-pointer">
-          <div>
-            <ul>
-              <li>From: Jaipur, India</li>
-              <li>Weight: 300g</li>
-              <li>Date:15/01/2025</li>
-              <li>Sender:James</li>
-            </ul>
-          </div>
-          <div className="flex flex-col">
-            <span>To: Mumbai, India</span>
-            <button
-              className="bg-[#555] text-black w-[100px] cursor-pointer p-[5px] 
-                    hover:bg-[#777] hover:text-[#fff] hover:scale-105 
-                    transition-all duration-200 rounded-md shadow-md mt-[18px]"
-            >
-              Pending
-            </button>
-          </div>
-        </div>
-        <div className="flex justify-between bg-[#d9d9d9] text-black h-[150px] w-[70vw] m-[20px] p-[20px] font-semibold cursor-pointer">
-          <div>
-            <ul>
-              <li>From: Delhi, India</li>
-              <li>Weight: 300g</li>
-              <li>Date:13/01/2025</li>
-              <li>Sender:Robert</li>
-            </ul>
-          </div>
-          <div className="flex flex-col">
-            <span>To: Agra, India</span>
-            <button
-              className=" text-[#fff] bg-[#21b134] w-[100px] cursor-pointer p-[5px] 
-                    hover:bg-[#777] hover:text-[#fff] hover:scale-105 
-                    transition-all duration-200 rounded-md shadow-md mt-[18px]"
-            >
-              Delivered
-            </button>
-          </div>
-        </div>
-        <div className="flex justify-between bg-[#d9d9d9] text-black h-[150px] w-[70vw] m-[20px] p-[20px] font-semibold cursor-pointer">
-          <div>
-            <ul>
-              <li>From: Delhi, India</li>
-              <li>Weight: 300g</li>
-              <li>Date:15/03/2025</li>
-              <li>Sender:James</li>
-            </ul>
-          </div>
-          <div className="flex flex-col">
-            <span>To: Mumbai, India</span>
-            <button
-              className="bg-[#555] text-[#FF0000] w-[100px] cursor-pointer p-[5px] 
-                    hover:bg-[#777] hover:text-[#FF0000] hover:scale-105 
-                    transition-all duration-200 rounded-md shadow-md mt-[18px]"
-            >
-              Rejected
-            </button>
-            <span className="text-[#FF0000] text-[18px]">
-              Wrong Address....
-            </span>
-          </div>
-        </div>
-        <div className="flex justify-between bg-[#d9d9d9] text-black h-[150px] w-[70vw] m-[20px] p-[20px] font-semibold cursor-pointer">
-          <div>
-            <ul>
-              <li>From: Mumbai, India</li>
-              <li>Weight: 300g</li>
-              <li>Date:03/03/2025</li>
-              <li>Sender:James</li>
-            </ul>
-          </div>
-          <div className="flex flex-col">
-            <span>To: Delhi, India</span>
-            <button
-              className=" text-[#fff] bg-[#21b134] w-[100px] cursor-pointer p-[5px] 
-                    hover:bg-[#777] hover:text-[#fff] hover:scale-105 
-                    transition-all duration-200 rounded-md shadow-md mt-[18px]"
-            >
-              Delivered
-            </button>
-          </div>
-        </div>
-        <div className="flex justify-between bg-[#d9d9d9] text-black h-[150px] w-[70vw] m-[20px] p-[20px] font-semibold cursor-pointer">
-          <div>
-            <ul>
-              <li>From: Agra, India</li>
-              <li>Weight: 500g</li>
-              <li>Date:05/03/2025</li>
-              <li>Sender:Abraham</li>
-            </ul>
-          </div>
-          <div className="flex flex-col">
-            <span>To: Mumbai, India</span>
-            <button
-              className="bg-[#555] text-black w-[100px] cursor-pointer p-[5px] 
-                    hover:bg-[#777] hover:text-[#fff] hover:scale-105 
-                    transition-all duration-200 rounded-md shadow-md mt-[18px]"
-            >
-              Pending
-            </button>
-          </div>
-        </div>
-        <div className="flex justify-between bg-[#d9d9d9] text-black h-[150px] w-[70vw] m-[20px] p-[20px] font-semibold cursor-pointer">
-          <div>
-            <ul>
-              <li>From: Mumbai, India</li>
-              <li>Weight: 200g</li>
-              <li>Date:08/03/2025</li>
-              <li>Sender:Alex</li>
-            </ul>
-          </div>
-          <div className="flex flex-col">
-            <span>To: Chandigarh, India</span>
-            <button
-              className=" text-[#fff] bg-[#21b134] w-[100px] cursor-pointer p-[5px] 
-                    hover:bg-[#777] hover:text-[#fff] hover:scale-105 
-                    transition-all duration-200 rounded-md shadow-md mt-[18px]"
-            >
-              Delivered
-            </button>
-          </div>
-        </div>
-        <div className="flex justify-between bg-[#d9d9d9] text-black h-[150px] w-[70vw] m-[20px] p-[20px] font-semibold cursor-pointer">
-          <div>
-            <ul>
-              <li>From: Delhi, India</li>
-              <li>Weight: 300g</li>
-              <li>Date:10/03/2025</li>
-              <li>Sender:Roger</li>
-            </ul>
-          </div>
-          <div className="flex flex-col">
-            <span>To: Rajisthan, India</span>
-            <button
-              className=" text-[#fff] bg-[#21b134] w-[100px] cursor-pointer p-[5px] 
-                    hover:bg-[#777] hover:text-[#fff] hover:scale-105 
-                    transition-all duration-200 rounded-md shadow-md mt-[18px]"
-            >
-              Delivered
-            </button>
-          </div>
+      {/* Sidebar Menu */}
+      <div className={`fixed top-0 left-0 w-[250px] h-full bg-gray-800 text-white shadow-lg z-50 p-5 transition-transform duration-300 ${menuOpen ? "translate-x-0" : "-translate-x-full"}`}>
+        <ul className="space-y-4">
+          <Link to="/allparcels"><li className="hover:text-yellow-400 cursor-pointer transition-all duration-300">All Parcels</li></Link>
+          <li className="hover:text-green-400 cursor-pointer transition-all duration-300">Statements</li>
+          <li className="hover:text-red-400 cursor-pointer transition-all duration-300" onClick={handleLogout}>Logout</li>
+        </ul>
+      </div>
+
+      {/* Profile Dropdown */}
+      <div className={`absolute top-[60px] right-4 w-[240px] h-[200px] bg-gradient-to-r from-gray-800 to-black text-white z-50 shadow-2xl rounded-lg transition-all duration-300 ${userOpen ? "block" : "hidden"}`}>
+        <ul className="flex flex-col items-center justify-center mt-[10px]">
+          <Link to="/allparcels"><li className="hover:text-yellow-400 my-2 cursor-pointer transition-all duration-300 hover:scale-105">All Parcels</li></Link>
+          <li className="hover:text-green-400 my-2 cursor-pointer transition-all duration-300 hover:scale-105">Statements</li>
+          <li className="hover:text-red-400 my-2 hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-110" onClick={handleLogout}>Logout</li>
+        </ul>
+      </div>
+
+      {/* Parcels List */}
+      <div className="flex justify-center px-[5%] mt-5">
+        <div className="min-h-[90vh] max-w-[90%] md:w-[60vw] rounded-md overflow-auto">
+          <h2 className="text-[18px] text-[#D9D9D9] p-[20px] rounded-md">My Parcels</h2>
+          {data.length > 0 ? (
+            data.map((parcel, index) => (
+              <Link key={index} to={`/parcel/${parcel._id}`}>
+                <div className={`grid grid-cols-2 gap-4 items-center h-[150px]  m-[20px] p-[20px] rounded-lg shadow-lg cursor-pointer bg-[#1F2937] text-white hover:shadow-2xl transition-all duration-300`}>
+                  <div className="mt-[-10px]">
+                    <ul className="text-lg font-semibold text-[#6B7280]">
+                      <li>From: {parcel.from}</li>
+                      <li>Sender: {parcel.sendername}</li>
+                      <li>Weight: {parcel.weight} kg</li>
+                      <li>Date: {moment(parcel.date).format("MMMM D, YYYY [at] h:mm A")}</li>
+                    </ul>
+                  </div>
+                  <div className="flex flex-col items-end">
+                    <span className="text-xl font-bold text-[#6B7280]">To: {parcel.to}</span>
+                    <button className={`w-[120px] py-2 mt-4 rounded-md text-lg font-medium ${parcel.status === 1 ? "bg-yellow-500 text-white" : "bg-green-600 text-white"} hover:opacity-80 transition-all`}>
+                      {parcel.status === 1 ? "Pending" : "Delivered"}
+                    </button>
+                  </div>
+                </div>
+              </Link>
+            ))
+          ) : (
+            <p className="text-center text-white">No parcels found</p>
+          )}
         </div>
       </div>
     </div>
   );
-}
+};
 
-export default Myparcels;
+export default MyParcels;

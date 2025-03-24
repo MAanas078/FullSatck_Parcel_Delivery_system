@@ -9,7 +9,7 @@ function Navbar() {
           className="bg-[#1e1e1e] p-[10px] text-gray-300 cursor-pointer border-none w-[100px] 
   rounded-md transition duration-300 ease-in-out transform hover:bg-[#333] hover:scale-105 hover:text-white"
         >
-          Login
+          Register
         </button>
       </Link>
     </div>

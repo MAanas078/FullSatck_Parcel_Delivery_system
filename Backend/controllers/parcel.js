@@ -36,7 +36,7 @@ const getAllParcels = async (req, res) => {
 
 // 📌 Get One Parcel
 const getOneParcel = async (req, res) => {
- 
+  console.log("message");
   try {
     console.log(`🔎 Searching for parcel with ID: ${req.params.id}`);
     
