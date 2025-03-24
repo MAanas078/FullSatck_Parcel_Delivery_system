@@ -1,3 +1,4 @@
+
 const mongoose = require("mongoose");
 const ParcelSchema = mongoose.Schema(
   {
@@ -12,13 +13,13 @@ const ParcelSchema = mongoose.Schema(
     recipientemail: { type: String, require: true },
     weight: { type: Number, require: true },
     cost: { type: Number, require: true },
-    date: { type: String, require: true },
+    date: { type: Date, default: Date.now }, // Corrected Date field
     note: { type: String },
     feedback: { type: String },
     status: { type: Number, default: 0 },
   },
   {
-    timestamp: true,
+    //timestamp: true,
   }
 );
 

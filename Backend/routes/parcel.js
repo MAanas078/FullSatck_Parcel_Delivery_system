@@ -7,6 +7,7 @@ const {
   getOneParcel,
   getUserParcel,
   deleteParcel,
+ 
 } = require("../controllers/parcel");
 const {
   verifyToken,
@@ -29,6 +30,7 @@ router.get("/find/:id", getOneParcel);
 
 //GET users parcels
 router.post("/me", getUserParcel);
+
 
 //DELETE Parcels
 

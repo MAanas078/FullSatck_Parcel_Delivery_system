@@ -1,20 +1,19 @@
 const mongoose = require("mongoose");
+
 const UserSchema = mongoose.Schema(
   {
-    fullname: {
-      type: String,
-      require: true,
-    },
-    email: { type: String, require: true },
+    fullname: { type: String, required: true },
+    email: { type: String, required: true },
     age: { type: Number },
-    country: { type: String, require: true },
-    address: { type: String, require: true },
-    password: { type: String, require: true },
-    status: { type: Number, default: 0 },
+    country: { type: String, required: true },
+    address: { type: String, required: true },
+    password: { type: String, required: true },
     role: { type: String, default: "user" },
+    status: { type: Number, default: 0 },
+   
   },
   {
-    timestamp: true,
+    timestamps: true, // Plural (correct)
   }
 );
 
