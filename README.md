@@ -68,9 +68,6 @@ The backend provides RESTful API endpoints for user authentication, parcel manag
 3. Commit your changes with proper messages
 4. Push to GitHub and create a Pull Request (PR)
 
-## License
-This project is licensed under the MIT License.
-
 ## Contact
 For any queries or contributions, reach out via GitHub Issues or email: [mohdanas94113@gmail.com]
 
